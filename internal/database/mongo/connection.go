@@ -79,7 +79,7 @@ func Connect(ctx context.Context, cfg Config) (*Client, error) {
 
       if err := client.Ping(pingCtx, readpref.Primary()); err != nil {
               _ = client.Disconnect(context.Background())
-              return nil, fmt.Errorf("mongo: el servidor no responde: %w", err)
+              return nil, fmt.Errorf("mongo: server dont response: %w", err)
       }
 
       return &Client{

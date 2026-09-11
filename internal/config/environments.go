@@ -1,4 +1,4 @@
-package api_config
+package config
 
 type ApiEnv struct {
 	port string

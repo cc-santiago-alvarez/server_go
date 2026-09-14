@@ -11,7 +11,7 @@ import (
 )
 
 // FindAll devuelve todos los productos de la coleccion.
-func (r *DemoMongoRepository) FindAll(ctx context.Context) ([]domain.Demo, error) {
+func (r *DemoRepository) FindAll(ctx context.Context) ([]domain.Demo, error) {
 	// Filtro vacio = traer todo. Aqui van las condiciones cuando las necesites.
 	filter := bson.M{}
 

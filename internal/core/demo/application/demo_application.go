@@ -7,7 +7,7 @@ import (
 // DemoApplication es el servicio de aplicacion del modulo demo: orquesta los
 // casos de uso y depende del puerto de salida, nunca del driver de Mongo.
 type DemoApplication struct {
-	DemoMongoRepository ports.DemoMongoRepository
+	DemoMongoRepository ports.DemoRepository
 }
 
 // Verificacion en tiempo de compilacion: si a DemoApplication le falta algun
@@ -16,7 +16,7 @@ var _ ports.DemoApplicationPorts = (*DemoApplication)(nil)
 
 // NewDemoApplication recibe la implementacion del repositorio ya construida
 // (inyeccion de dependencias desde main).
-func NewDemoApplication(repo ports.DemoMongoRepository) *DemoApplication {
+func NewDemoApplication(repo ports.DemoRepository) *DemoApplication {
 	return &DemoApplication{
 		DemoMongoRepository: repo,
 	}

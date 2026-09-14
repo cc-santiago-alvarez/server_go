@@ -9,7 +9,7 @@ const (
 
 //getters
 
-func (s DemoStatus) ToString() string {
+func (s DemoStatus) String() string {
 	return string(s)
 }
 
@@ -30,21 +30,28 @@ func (s DemoStatus) IsValid() bool {
 	return false
 }
 
-type ListDemoStatus struct {
-	Label string `json:"name"`
-	Value string `json:"value"`
-	Color string `json:"color"`
+func (s DemoStatus) CanTransitionTo(next DemoStatus) bool {
+	if !next.IsValid() {
+		return false
+	}
+	return s != next
 }
 
-func ListStatus() []ListDemoStatus {
-	return []ListDemoStatus{
-		ListDemoStatus{
-			Label: DemoStatusActive.ToString(),
-			Value: DemoStatusInactive.ToString(),
-		},
-		ListDemoStatus{
-			Label: DemoStatusActive.ToString(),
-			Value: DemoStatusInactive.ToString(),
-		},
-	}
-}
+// type ListDemoStatus struct {
+// 	Label string `json:"name"`
+// 	Value string `json:"value"`
+// 	Color string `json:"color"`
+// }
+
+// func ListStatus() []ListDemoStatus {
+// 	return []ListDemoStatus{
+// 		ListDemoStatus{
+// 			Label: DemoStatusActive.ToString(),
+// 			Value: DemoStatusInactive.ToString(),
+// 		},
+// 		ListDemoStatus{
+// 			Label: DemoStatusActive.ToString(),
+// 			Value: DemoStatusInactive.ToString(),
+// 		},
+// 	}
+// }

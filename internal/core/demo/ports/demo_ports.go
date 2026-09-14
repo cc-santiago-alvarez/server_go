@@ -10,6 +10,6 @@ type DemoApplicationPorts interface {
 	GetAll(ctx context.Context) ([]domain.Demo, error)
 }
 
-type DemoMongoRepository interface {
+type DemoRepository interface {
 	FindAll(ctx context.Context) ([]domain.Demo, error)
 }

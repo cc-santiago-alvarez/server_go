@@ -72,8 +72,7 @@ func Connect(ctx context.Context, cfg Config) (*Client, error) {
 		return nil, fmt.Errorf("mongo: Unable to create the client:%w", err)
 	}
 
-	// mongo.Connect es perezoso: no contacta al servidor. El Ping es lo que
-	// confirma red, credenciales y authSource antes de seguir arrancando.
+	// El Ping es lo que confirma red, credenciales y authSource antes de seguir arrancando.
 	pingCtx, cancel := context.WithTimeout(ctx, cfg.ConnectTimeout)
 	defer cancel()
 

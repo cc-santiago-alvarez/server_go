@@ -1,5 +1,7 @@
 package config
 
 type ApiEnv struct {
-	port string
+	port     string
+	URI      string
+	Database string
 }

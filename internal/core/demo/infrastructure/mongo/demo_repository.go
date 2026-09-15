@@ -11,7 +11,7 @@ import (
 
 const collectionName = "products_demo"
 
-// DemoMongoRepository es el adaptador de salida: traduce entre el dominio y
+// DemoRepository es el adaptador de salida: traduce entre el dominio y
 // la coleccion de Mongo. Es el unico lugar del modulo que conoce el driver.
 type DemoRepository struct {
 	collection *mongodriver.Collection
@@ -21,6 +21,7 @@ type DemoRepository struct {
 var _ ports.DemoRepository = (*DemoRepository)(nil)
 
 // NewDemoRepository recibe el cliente ya conectado y se queda con su coleccion.
+// Este es el constructor
 func NewDemoRepository(db *mongodb.Client) *DemoRepository {
 	return &DemoRepository{
 		collection: db.Collection(collectionName),

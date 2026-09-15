@@ -6,12 +6,14 @@ import (
 	"server_go/internal/core/demo/domain"
 )
 
-// GetAll es el caso de uso "listar productos".
+// GetAll es el caso de uso "listar demos".
+// Cuando no hay registros devuelve un slice vacío, nunca nil. Ese contrato está
+// declarado en el puerto y lo cumple el adaptador; aquí solo se propaga.
 func (s *DemoApplication) GetAll(ctx context.Context) ([]domain.Demo, error) {
-	products, err := s.DemoRepository.FindAll(ctx)
+	demos, err := s.repo.FindAll(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("demo: get all products: %w", err)
+		return nil, fmt.Errorf("demo: get all: %w", err)
 	}
 
-	return products, nil
+	return demos, nil
 }

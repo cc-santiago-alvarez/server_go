@@ -12,8 +12,9 @@ import (
 
 // FindAll devuelve todos los productos de la coleccion.
 func (r *DemoRepository) FindAll(ctx context.Context) ([]domain.Demo, error) {
-	// Filtro vacio = traer todo. Aqui van las condiciones cuando las necesites.
-	filter := bson.M{}
+
+	// Filtro, trae todos los documentos deonde isRemove: true.
+	filter := bson.M{"isRemove": bson.M{"$ne": true}}
 
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 

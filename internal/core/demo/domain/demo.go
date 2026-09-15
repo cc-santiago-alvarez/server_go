@@ -38,7 +38,7 @@ type Demo struct {
 	Status      DemoStatus
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	IsRemoved   bool
+	IsRemove    bool
 }
 
 // NewDemo es el constructor de la entidad y la única puerta de entrada para
@@ -58,7 +58,7 @@ func NewDemo(name, description string, price float64) (*Demo, error) {
 		ID: uuid.New().String(), Name: name, Description: description,
 		Price:     price,
 		Status:    DemoStatusActive,
-		CreatedAt: now, UpdatedAt: now, IsRemoved: false,
+		CreatedAt: now, UpdatedAt: now, IsRemove: false,
 	}, nil
 }
 
@@ -80,7 +80,7 @@ func (d *Demo) Deactivate() error { return d.setStatus(DemoStatusInactive) }
 //
 // Solo si pasa ambas aplica el cambio y sella UpdatedAt.
 func (d *Demo) setStatus(next DemoStatus) error {
-	if d.IsRemoved {
+	if d.IsRemove {
 		return ErrDemoRemoved
 	}
 
@@ -97,10 +97,10 @@ func (d *Demo) setStatus(next DemoStatus) error {
 //
 // Una vez aquí, setStatus rechazará cualquier cambio de estado posterior.
 func (d *Demo) Remove() error {
-	if d.IsRemoved {
+	if d.IsRemove {
 		return ErrDemoAlreadyRemoved
 	}
-	d.IsRemoved = true
+	d.IsRemove = true
 	d.UpdatedAt = time.Now().UTC()
 	return nil
 }

@@ -8,27 +8,31 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type cfg struct {
+type Config struct {
 	Env *ApiEnv
 }
 
-func InitConfig() *cfg {
-	return &cfg{}
+func InitConfig() *Config {
+	return &Config{}
 }
 
-func (c *cfg) LoadEnvs() {
+// Carga
+func (c *Config) LoadEnvs() {
+	if env := os.Getenv("ENV"); env != "" {
+		envFile := fmt.Sprintf(".env.%s", env)
+		if err := godotenv.Load(envFile); err != nil {
+			log.Fatalf("Error loading env file %s: %v", envFile, err)
+		}
+		log.Printf("Env loaded: %s", envFile)
+	}
+
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	envFile := fmt.Sprintf(".env.%s", os.Getenv("ENV"))
-	if err := godotenv.Load(envFile); err != nil {
-		log.Fatal("Error loading env file: ", envFile)
-	}
-
-	log.Printf("Env loaded: %s\n", envFile)
-
 	c.Env = &ApiEnv{
-		port: os.Getenv("PORT"),
+		Port:     os.Getenv("PORT"),
+		URI:      os.Getenv("MONGO_URI"),
+		Database: os.Getenv("MONGO_DATABASE"),
 	}
 }

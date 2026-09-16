@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -24,14 +23,18 @@ func main() {
 	//conexion de base de datos
 	ctx := context.Background()
 
-	db, err := mongodb.Connect(ctx, mongodb.Config{
-		URI:      os.Getenv("MONGO_URI"),      // la URI con root:12345abc@... vive aqui
-		Database: os.Getenv("MONGO_DATABASE"), // tu URI no trae DB, va aparte
-	})
+	mongoCfg := mongodb.Config{
+		URI:      os.Getenv("MONGO_URI"),
+		Database: os.Getenv("MONGO_DATABASE"),
+	}
+
+	db, err := mongodb.Connect(ctx, mongoCfg)
 	if err != nil {
-		log.Fatal(err) // si Mongo no responde, el proceso no arranca
+		log.Fatalf("mongo: conexión fallida: %v", err)
 	}
 	defer db.Close(ctx)
+
+	log.Printf("mongo: conectado a la base de datos %q", mongoCfg.Database)
 
 	// --- Cableado del módulo demo --------------------------------------------
 	// De adentro hacia afuera. Cada línea recibe la de arriba ya construida, y
@@ -41,9 +44,6 @@ func main() {
 	demoApp := application.NewDemoApplication(demoRepo) // casos de uso
 	demoHandler := httpDir.NewDemoHandler(demoApp)      // adaptador de entrada
 
-	demoRepository := demomongo.NewDemoRepository(db)
-	_ = demoRepository
-
 	//cargo el port desde internal/config.go
 	port := cfg.Env.Port
 	if port == "" {
@@ -51,12 +51,12 @@ func main() {
 	}
 	addr := ":" + port
 
-	fmt.Println("Server running on", addr)
+	log.Printf("http: servidor escuchando en %s", addr)
 
-	//Rutas
+	// main solo monta módulos: cada uno sabe qué rutas expone y bajo qué verbo.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", health)
-	mux.HandleFunc("Get /demos", demoHandler.GetAll)
+	demoHandler.RegisterRoutes(mux)
 
 	log.Fatal(http.ListenAndServe(addr, mux))
 }

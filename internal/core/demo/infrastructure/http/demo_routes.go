@@ -16,6 +16,7 @@ func (h *DemoHandler) RegisterRoutes(mux Router) {
 	// El método va en MAYÚSCULAS: ServeMux compara el método tal cual, así que
 	// "Get /demos" no casaría nunca con una petición real, que llega como GET.
 	mux.HandleFunc("GET /demos", h.GetAll)
+	mux.HandleFunc("POST /demos", h.Create)
 }
 
 // Router es lo mínimo que el módulo necesita de quien lo monta.

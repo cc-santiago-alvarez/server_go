@@ -13,7 +13,13 @@ import (
 	mongodb "server_go/internal/database/mongo"
 )
 
-const defaultPort = "3252"
+const (
+	defaultPort = "3252"
+
+	// Sin barra final: la lleva el patrón del mux, y StripPrefix tiene que
+	// recortar "/api/v1" para que al módulo le llegue "/demos" y no "demos".
+	apiPrefix = "/api/v1"
+)
 
 func main() {
 	//Esto carga las variables de entorno
@@ -54,9 +60,15 @@ func main() {
 	log.Printf("http: servidor escuchando en %s", addr)
 
 	// main solo monta módulos: cada uno sabe qué rutas expone y bajo qué verbo.
+	// La versión de la API es lo único que se decide aquí, porque vale para
+	// todos los módulos: ellos siguen declarando "/demos" y el prefijo se pone
+	// en un solo sitio.
+	api := http.NewServeMux()
+	demoHandler.RegisterRoutes(api)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", health)
-	demoHandler.RegisterRoutes(mux)
+	mux.Handle(apiPrefix+"/", http.StripPrefix(apiPrefix, api))
 
 	log.Fatal(http.ListenAndServe(addr, mux))
 }

@@ -19,14 +19,10 @@ func (s *DemoApplication) Create(ctx context.Context, in ports.CreateDemoInput) 
 	//    Él pone el ID, el status inicial y los timestamps; el input no los trae.
 	demo, err := domain.NewDemo(in.Name, in.Description, in.Price)
 	if err != nil {
-		// %w y no %v: envuelve el centinela sin perderlo, que es lo que hace que
-		// errors.Is siga casando en writeError y el cliente reciba 400 y no 500.
-		// El mensaje final se lee como la ruta del fallo:
-		// "demo: create: demo: NAME_IS_REQUIRED".
 		return nil, fmt.Errorf("demo: create: %w", err)
 	}
 
-	// 2. El repositorio persiste algo que ya es válido. Se pasa *demo porque el
+	// El repositorio persiste algo que ya es válido. Se pasa *demo porque el
 	//    puerto recibe un valor: el adaptador no tiene por qué poder mutar la
 	//    entidad, solo escribirla.
 	if err := s.repo.InsertOne(ctx, *demo); err != nil {
